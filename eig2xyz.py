@@ -23,6 +23,21 @@ atomic_masses = [0.00, 1.008, 4.002, 6.94, 9.012, 10.81, 12.011,
                  269.0, 270.0, 270.0, 278.0, 281.0, 281.0, 285.0,
                  286.0, 289.0, 289.0, 293.0, 293.0, 294.0]
 
+atomic_symbols = ['X', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F',
+                  'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
+                  'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co',
+                  'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br',
+                  'Kr', 'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru',
+                  'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I',
+                  'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm',
+                  'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm',
+                  'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt',
+                  'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn',
+                  'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am',
+                  'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr',
+                  'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg',
+                  'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts']
+
 
 def get_args():
     parser = ArgumentParser(description="Convert a GULP .eig file "
@@ -81,8 +96,8 @@ class EigenvectorModel():
             for i in range(self.natoms):
                 displacement = self.eigenvectors[ikpoint, imode, i, :] / \
                     np.sqrt(self.A[i])
-                outf.write(("{:12.6f}"*6 + '\n').format(
-                    *self.pos[i, :], *displacement))
+                outf.write(("{:4s}" + "{:12.6f}"*6 + '\n').format(
+                    atomic_symbols[self.Z[i]], *self.pos[i, :], *displacement))
 
 
 if __name__ == '__main__':
@@ -97,6 +112,6 @@ if __name__ == '__main__':
         raise IndexError(f"mode {args.eigindex} requested, but only "
                          "{model.nmodes} modes in .eig file!")
 
-    outfile = '.'.join(args.filename.split('.'))[:-1] + '.xyz'
+    outfile = '.'.join(args.filename.split('.')[:-1]) + '.xyz'
 
     model.writexyz(outfile, args.kindex - 1, args.eigindex - 1)
